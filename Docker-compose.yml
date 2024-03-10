@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-login
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: 'Asia/Seoul'
+    networks:
+      - login
+    platform: linux/x86_64
+    ports:
+      - "3307:3306"
+    volumes:
+      - ${MYSQL_DATA_DIR}:/var/lib/mysql/
+      - ${MYSQL_CONF_DIR}:/etc/my.cnf
+    # /home/gwangbu/mysql/data/
+    # /home/gwangbu/conf/my.cnf
+  spring:
+    env_file:
+      - .env
+    image: openjdk17-alpine_login-spring:latest
+    container_name: spring
+    build:
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: ${MYSQL_URL}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - login
+    restart: always
+networks:
+  login: {}
