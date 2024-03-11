@@ -94,7 +94,9 @@ GOOGLE
 oauth2로그인 시작 엔드포인트
 
 /api/reissue
-jwt토큰의 재발급 엔드포인트(구현예정)
+jwt토큰의 재발급 엔드포인트
+Authorization 헤더에 Bearer {refreshToken}을 담아 전송
+jwt 혹은 null값 받음
 
 /logout
 jwt토큰의 만료 엔드포인트(구현예정)

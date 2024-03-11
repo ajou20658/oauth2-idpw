@@ -1,4 +1,4 @@
-package com.login.login.jwt;
+package com.login.login.jwt.config;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

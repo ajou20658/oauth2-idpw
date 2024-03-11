@@ -22,6 +22,19 @@ services:
       - ${MYSQL_CONF_DIR}:/etc/my.cnf
     # /home/gwangbu/mysql/data/
     # /home/gwangbu/conf/my.cnf
+
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: redis-logout
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - login
+
+
   spring:
     env_file:
       - .env

@@ -5,6 +5,7 @@ import com.login.login.domain.member.MemberRepository;
 import com.login.login.oauth2.service.dto.OAuthAttributes;
 import com.login.login.oauth2.service.factory.OAuthAttributesAdapterFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -31,7 +32,8 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         var attributes = oAuthAttributes(registrationId, oAuth2User);
         var member = saveOrUpdate(attributes);
         Map<String, Object> map = attributes.attributes();
-        map.put("id", member.getId());
+        map.put("id", member.getId());// name, email,profile,id
+
         return new DefaultOAuth2User(
                 List.of(new SimpleGrantedAuthority(member.roleKey())),
                 map,

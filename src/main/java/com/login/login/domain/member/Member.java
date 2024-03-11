@@ -16,11 +16,12 @@ public class Member extends BaseTime{
     private String profile;
     private String email;
     private String password;
-
+    private String refreshToken;
     @Enumerated(EnumType.STRING)
     private Role role;
     @Enumerated(EnumType.STRING)
     private Social social;
+
     @Builder
     public Member(String name, String profile, String email, String password, Role role, Social social){
         this.name = name;
@@ -37,5 +38,12 @@ public class Member extends BaseTime{
     }
     public String roleKey(){
         return role.key();
+    }
+    public String updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+        return refreshToken;
+    }
+    public void clearRefreshToken(){
+        this.refreshToken = null;
     }
 }
