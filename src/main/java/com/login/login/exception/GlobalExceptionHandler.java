@@ -1,6 +1,6 @@
 package com.login.login.exception;
 
-import com.login.login.oauth2.service.dto.ApiResponse;
+import com.login.login.service.oauth2.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

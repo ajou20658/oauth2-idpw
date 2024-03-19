@@ -16,7 +16,7 @@ services:
       - login
     platform: linux/x86_64
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - ${MYSQL_DATA_DIR}:/var/lib/mysql/
       - ${MYSQL_CONF_DIR}:/etc/my.cnf
@@ -54,4 +54,5 @@ services:
       - login
     restart: always
 networks:
-  login: {}
+  login:
+    external: true

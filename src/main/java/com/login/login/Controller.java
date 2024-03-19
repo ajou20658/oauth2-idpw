@@ -2,20 +2,20 @@ package com.login.login;
 
 import com.login.login.exception.ControllerMessage;
 import com.login.login.exception.CustomException;
-import com.login.login.jwt.JwtTokenProvider;
-import com.login.login.jwt.TokenDto;
-import com.login.login.oauth2.service.dto.ApiResponse;
+import com.login.login.service.jwt.JwtTokenProvider;
+import com.login.login.service.oauth2.dto.ApiResponse;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Getter;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -34,28 +34,18 @@ public class Controller {
             throw new CustomException(ControllerMessage.PLEASE_LOGIN);
         }
     }
-    @GetMapping("/")
-    public ApiResponse jwtIssue(@Nullable Authentication authentication){
-        if(authentication!=null){
-            TokenDto tokenDto = jwtTokenProvider.jwtIssue(authentication);
-            if(tokenDto!=null)
-                return new ApiResponse(HttpStatus.OK, tokenDto);
+    @GetMapping("/api/jwt")
+    public ApiResponse showJwt(HttpServletRequest request, Model model){
+        HttpSession  session = request.getSession();
+        String access = (String) session.getAttribute("access");
+        String refresh = (String) session.getAttribute("refresh");
+        if(access == null || refresh == null){
+            return new ApiResponse(ControllerMessage.RE_LOGIN.getHttpStatus(),ControllerMessage.RE_LOGIN.getMessage());
         }
-        throw new CustomException(ControllerMessage.RE_LOGIN);
+        Map<String,String> jwt = new HashMap<>();
+        jwt.put("access",access);
+        jwt.put("refresh", refresh);
+        return new ApiResponse(HttpStatus.OK,jwt);
     }
-    @GetMapping("/api/token")
-    public ApiResponse jwtViewer(Authentication authentication){
-        TokenDto tokenDto = jwtTokenProvider.jwtIssue(authentication);
-        return new ApiResponse(HttpStatus.OK, tokenDto);
-    }
-    @GetMapping("/api/reissue")
-    public ApiResponse reissue(HttpServletRequest request) {//헤더로 요청하게 설정
-        TokenDto tokenDto = jwtTokenProvider.jwtRefresh(jwtTokenProvider.resolveAccessToken(request));
-        return new ApiResponse(HttpStatus.OK,tokenDto);
-    }
-    @GetMapping("/api/logout")
-    public ApiResponse logout(HttpServletRequest request){ //헤더로 요청하게 설정
-        jwtTokenProvider.logout(jwtTokenProvider.resolveAccessToken(request));
-        return new ApiResponse(HttpStatus.OK, "로그아웃 성공");
-    }
+
 }

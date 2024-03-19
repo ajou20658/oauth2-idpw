@@ -1,7 +1,7 @@
 package com.login.login.config;
 
-import com.login.login.jwt.config.JwtFilter;
-import com.login.login.jwt.JwtTokenProvider;
+import com.login.login.service.jwt.JwtFilter;
+import com.login.login.service.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

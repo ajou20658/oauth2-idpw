@@ -69,7 +69,8 @@ GOOGLE
 }
 ```
 
-# JWT발급
+# JWT발급 -> 분리하여 플라스크에서 실행
+# JWT인증코드만 구현
 ```json
 {
   "httpStatus": "OK",
