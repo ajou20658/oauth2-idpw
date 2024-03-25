@@ -26,12 +26,6 @@ import java.util.Collection;
 @Service
 @Slf4j
 public class JwtTokenProvider {
-    @Value("${jwt.issuer}")
-    private String issuer;
-    @Value("${jwt.expiration}")
-    private Long expiration;
-    @Value("${JWT_REFRESH}")
-    private Long refresh;
     private final RedisTemplate<String,Object> redisTemplate;
     private final MemberRepository memberRepository;
     public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -39,8 +33,6 @@ public class JwtTokenProvider {
     public static final String AUTHORITIES_KEY="auth";
     public static final String USER_ID = "sub";
     public static final String USER_NAME = "name";
-    public static final String USER_IMAIL = "UIM";
-    public static final String USER_PROFILE = "UP";
     private final SecretKey secretKey;
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, MemberRepository memberRepository, RedisTemplate<String,Object> redisTemplate){
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));

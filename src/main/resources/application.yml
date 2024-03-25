@@ -6,6 +6,3 @@ spring:
     active: oauth,db
 jwt:
   secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}
-  #    refresh: ${JWT_REFRESH}
-  issuer: ${JWT_ISSUER}
