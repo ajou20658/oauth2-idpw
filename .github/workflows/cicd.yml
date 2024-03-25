@@ -15,7 +15,7 @@ env:
   S3_BUCKET_NAME: gwangbu
   RESOURCE_PATH: ./src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: gwangbu-code-deploy
-  CODE_DEPLOY_DEVELOPMENT_GROUP_NAME: gwangbu-code-deploy
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: gwangbu-code-deploy
 
 jobs:
   build:
