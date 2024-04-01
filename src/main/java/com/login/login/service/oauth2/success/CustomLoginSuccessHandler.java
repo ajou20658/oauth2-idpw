@@ -38,10 +38,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         Map<String,Object> attributes = oAuth2User.getAttributes();
         String authorities =authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
         String jwtGenerateUrl = jwtUrl+issue+"?userId="+attributes.get("id")+"&userName="+attributes.get("name")+"&authorities="+authorities;
-//        Map<String,Object> params = new HashMap<>();
-//        params.put("userId",attributes.get("id"));
-//        params.put("userName", attributes.get("name"));
-//        params.put("authorities",);
         Map<String,Object> jwt = restTemplate.getForObject(jwtGenerateUrl, JSONObject.class);
         log.info(jwt.toString());
         String access = jwt.get("accessToken").toString();
@@ -49,8 +45,11 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         Member member = memberRepository.findById(Long.valueOf(attributes.get("id").toString())).get();
         member.updateRefreshToken(refresh);
         memberRepository.save(member);
-        request.getSession().setAttribute("access",access);
-        request.getSession().setAttribute("refresh", refresh);
-        response.sendRedirect(request.getContextPath()+"/api/jwt");
+//        request.getSession().setAttribute("access",access);
+//        request.getSession().setAttribute("refresh", refresh);
+//        response.sendRedirect(request.getContextPath()+"/api/jwt");//스프링 로그인 페이지 사용할 경우
+        response.addHeader("access",access);
+        response.addHeader("refresh",refresh);
+        response.sendRedirect("http://localhost:3000/?access="+access+"&refresh="+refresh); //프론트로 결과를 리다이렉션
     }
 }
