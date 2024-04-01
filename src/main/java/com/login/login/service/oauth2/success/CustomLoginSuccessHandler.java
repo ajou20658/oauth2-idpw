@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -25,8 +26,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
     private final RestTemplate restTemplate;
-    public static final String jwtUrl="http://jwt-py-jwt-1:5000/";
-    public static final String issue="jwt/issue";
+    @Value("${jwt.url}")
+    private String jwtUrl;
+    @Value("${jwt.issue}")
+    private String issue;
     private final MemberRepository memberRepository;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

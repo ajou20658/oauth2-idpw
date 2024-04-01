@@ -6,3 +6,7 @@ spring:
     active: oauth,db
 jwt:
   secret: ${JWT_SECRET}
+  url: "http://py:5000/jwt/"
+  issue: "issue"
+  logout: "logout"
+  reissue: "reissue"
