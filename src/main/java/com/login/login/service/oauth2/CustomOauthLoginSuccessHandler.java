@@ -1,7 +1,7 @@
-package com.login.login.service.oauth2.success;
+package com.login.login.service.oauth2;
 
-import com.login.login.member.Member;
-import com.login.login.member.MemberRepository;
+import com.login.login.member.entity.Member;
+import com.login.login.member.entity.MemberRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,14 +17,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
+public class CustomOauthLoginSuccessHandler implements AuthenticationSuccessHandler {
     private final RestTemplate restTemplate;
     @Value("${jwt.url}")
     private String jwtUrl;
@@ -50,6 +49,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 //        response.sendRedirect(request.getContextPath()+"/api/jwt");//스프링 로그인 페이지 사용할 경우
         response.addHeader("access",access);
         response.addHeader("refresh",refresh);
-        response.sendRedirect("http://localhost:3000/?access="+access+"&refresh="+refresh); //프론트로 결과를 리다이렉션
+        response.sendRedirect("http://localhost:3000/redirect?access="+access+"&refresh="+refresh); //프론트로 결과를 리다이렉션
     }
 }

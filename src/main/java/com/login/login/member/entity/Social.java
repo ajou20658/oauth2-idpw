@@ -1,4 +1,4 @@
-package com.login.login.member;
+package com.login.login.member.entity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -8,6 +8,7 @@ public enum Social {
     NAVER("네이버"),
     GOOGLE("구글"),
     FACEBOOK("페이스북"),
-    GITHUB("깃허브");
+    GITHUB("깃허브"),
+    IDPW("IDPW");
     private final String title;
 }

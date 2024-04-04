@@ -2,7 +2,7 @@ package com.login.login.service.jwt;
 
 import com.login.login.exception.ControllerMessage;
 import com.login.login.exception.CustomException;
-import com.login.login.member.MemberRepository;
+import com.login.login.member.entity.MemberRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -58,7 +58,7 @@ public class JwtTokenProvider {
         }catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e){
             log.info("Invalid JWT Token", e);
         }catch (ExpiredJwtException e){
-            throw new CustomException(ControllerMessage.EXPIRED_ACCESSTOKEN);
+            throw new CustomException(ControllerMessage.EXPIRED_ACCESS_TOKEN);
         }catch (UnsupportedJwtException e){
             log.info("Unsupported JWT Token", e);
         }catch (IllegalArgumentException e){

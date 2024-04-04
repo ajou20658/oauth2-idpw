@@ -14,14 +14,14 @@ public class GlobalExceptionHandler{
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
-    public ApiResponse forbiddenException(RuntimeException e){
+    public ApiResponse internalServerException(RuntimeException e){
         log.error("",e);
         return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, ERROR_MSG);
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(CustomException.class)
-    public ApiResponse forbiddenException(CustomException e){
+    public ApiResponse customException(CustomException e){
         return new ApiResponse(e.getCustomMessage().getHttpStatus(), e.getCustomMessage().getMessage());
     }
 }

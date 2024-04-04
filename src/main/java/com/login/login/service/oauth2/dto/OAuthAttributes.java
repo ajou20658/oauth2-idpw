@@ -1,8 +1,8 @@
 package com.login.login.service.oauth2.dto;
 
-import com.login.login.member.Member;
-import com.login.login.member.Role;
-import com.login.login.member.Social;
+import com.login.login.member.entity.Member;
+import com.login.login.member.entity.Role;
+import com.login.login.member.entity.Social;
 import lombok.Builder;
 
 import java.util.Map;

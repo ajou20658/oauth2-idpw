@@ -27,22 +27,15 @@ public class JwtFilter extends OncePerRequestFilter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestURI = httpServletRequest.getRequestURI();
         log.info("requestURI : {}",requestURI);
+        if(requestURI.startsWith("/api")){
+            filterChain.doFilter(request,response);
+            return;
+        }
         if(isOAuth2LoginPath(request)){
             filterChain.doFilter(request, response);
             return;
         }
         String accessToken = tokenProvider.resolveAccessToken(request);
-
-//        if(accessToken != null && tokenProvider.validateToken(accessToken)){
-//            if(isTokenBlacklisted(accessToken)){
-//
-//                throw new CustomException(ControllerMessage.INVALID_TOKEN);
-////                filterChain.doFilter(request,response);
-//            }
-//
-//            Authentication authentication = tokenProvider.getAuthentication(accessToken);
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//        }
         try{
             if(accessToken != null && tokenProvider.validateToken(accessToken)){
                 if(isTokenBlacklisted(accessToken)){

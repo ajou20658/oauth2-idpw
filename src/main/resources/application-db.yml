@@ -1,15 +1,16 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf-8
+#    url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://oauth2.czucyuiocfxn.ap-northeast-2.rds.amazonaws.com:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf-8
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     open-in-view: false
   data:
     redis:
-      host: localhost
+      host: free.glnfen.ng.0001.apn2.cache.amazonaws.com
       port: 6379

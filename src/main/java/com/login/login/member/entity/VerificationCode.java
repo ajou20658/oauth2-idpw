@@ -1,4 +1,4 @@
-package com.login.login.member;
+package com.login.login.member.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

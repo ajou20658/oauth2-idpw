@@ -12,7 +12,10 @@ public enum ControllerMessage {
     BAD_REQUEST(HttpStatus.BAD_REQUEST,"잘못된 요청"),
     RE_LOGIN(HttpStatus.BAD_REQUEST,"재 로그인 필요"),
     PLEASE_LOGIN(HttpStatus.BAD_REQUEST, "로그인 필요"),
-    EXPIRED_ACCESSTOKEN(HttpStatus.OK,"만료된 토큰. 재갱신 요청 필요"),
+    DUP_EMAIL(HttpStatus.BAD_REQUEST,"이미 존재하는 이메일"),
+    BAD_ROLE(HttpStatus.BAD_REQUEST, "올바르지 않는 Role(ROLE_POLICE/ROLE_FIRE)"),
+    PLEASE_LOGOUT(HttpStatus.BAD_REQUEST,"로그아웃 필요"),
+    EXPIRED_ACCESS_TOKEN(HttpStatus.BAD_REQUEST,"만료된 토큰. 재갱신 요청 필요"),
     INVALID_TOKEN(HttpStatus.BAD_REQUEST,"유효하지 않은 토큰");
     ControllerMessage(HttpStatus httpStatus, String message) {
         this.message = message;

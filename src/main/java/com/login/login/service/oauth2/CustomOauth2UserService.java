@@ -1,7 +1,7 @@
 package com.login.login.service.oauth2;
 
-import com.login.login.member.Member;
-import com.login.login.member.MemberRepository;
+import com.login.login.member.entity.Member;
+import com.login.login.member.entity.MemberRepository;
 import com.login.login.service.oauth2.dto.OAuthAttributes;
 import com.login.login.service.oauth2.factory.OAuthAttributesAdapterFactory;
 import lombok.RequiredArgsConstructor;
