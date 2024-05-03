@@ -1,14 +1,14 @@
-package com.login.login.service.jwt;
+package com.login.login.domain.service.jwt;
 
-import com.login.login.exception.ControllerMessage;
-import com.login.login.exception.CustomException;
+import com.login.login.common.exception.ControllerMessage;
+import com.login.login.common.exception.CustomException;
+import com.login.login.infrastructure.cache.redis.RedisService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,17 +20,13 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-    private final RedisTemplate<String,Object> redisTemplate;
+    private final RedisService redisService;
     private final JwtTokenProvider tokenProvider;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException,CustomException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestURI = httpServletRequest.getRequestURI();
         log.info("requestURI : {}",requestURI);
-        if(requestURI.startsWith("/api")){
-            filterChain.doFilter(request,response);
-            return;
-        }
         if(isOAuth2LoginPath(request)){
             filterChain.doFilter(request, response);
             return;
@@ -38,20 +34,24 @@ public class JwtFilter extends OncePerRequestFilter {
         String accessToken = tokenProvider.resolveAccessToken(request);
         try{
             if(accessToken != null && tokenProvider.validateToken(accessToken)){
-                if(isTokenBlacklisted(accessToken)){
+                if(redisService.isTokenBlacklisted(accessToken)){
+                    log.info("로그아웃된 토큰");
                     throw new CustomException(ControllerMessage.INVALID_TOKEN);
                 }
                 Authentication authentication = tokenProvider.getAuthentication(accessToken);
+                if(authentication==null){
+                    log.info("authentication생성되지 않음");
+                }
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("jwt 유효함");
+                filterChain.doFilter(request, response);
+            }else{
+                log.info("유효하지 않은 토큰");
             }
         }catch (Exception ex){
             SecurityContextHolder.clearContext();
         }
-        log.info("jwt 유효하지 않음");
         filterChain.doFilter(request, response);
-    }
-    private boolean isTokenBlacklisted(String token){
-        return redisTemplate.opsForValue().get(token) != null;
     }
     private boolean isOAuth2LoginPath(HttpServletRequest request){
         String requestURI = request.getRequestURI();
