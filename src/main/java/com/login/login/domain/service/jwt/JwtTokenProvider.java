@@ -44,8 +44,6 @@ public class JwtTokenProvider {
     private Long validTime;
     @Value("${jwt.refreshTime}")
     private Long refreshTime;
-//    @Value("${JWT_SECRET}")
-//    private SecretKey secretKey;
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secretKey,
             MemberRepository memberRepository,
@@ -97,7 +95,7 @@ public class JwtTokenProvider {
         Date now = new Date();
         String access = Jwts.builder()
                 .subject(userId)
-                .claim(AUTHORITIES_KEY,claims.get("roles"))
+                .claim(AUTHORITIES_KEY,claims.get(AUTHORITIES_KEY))
                 .issuedAt(now)
                 .expiration(new Date(now.getTime()+validTime))
                 .signWith(secretKey)
@@ -132,16 +130,19 @@ public class JwtTokenProvider {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return true;
         }catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e){
-            log.info("Invalid JWT Token", e);
+            log.info("Invalid JWT Token");
         }catch (ExpiredJwtException e){
-            log.info("만료된 토큰",e);
+            log.info("만료된 토큰");
             throw new CustomException(ControllerMessage.EXPIRED_ACCESS_TOKEN);
         }catch (UnsupportedJwtException e){
-            log.info("Unsupported JWT Token", e);
+            log.info("Unsupported JWT Token");
         }catch (IllegalArgumentException e){
-            log.info("JWT claims string is empty", e);
+            log.info("JWT claims string is empty");
         }
         return false;
+    }
+    public Long getParseId(String token){
+        return Long.valueOf(parse(token).getSubject());
     }
     private Claims parse(String token){
         try{
@@ -157,13 +158,12 @@ public class JwtTokenProvider {
             return null;
         }
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        log.info("bearerToken : {}", bearerToken);
+//        log.info("bearerToken : {}", bearerToken);
         if(bearerToken != null && bearerToken.startsWith(BEARER_PREFIX)){
             return bearerToken.substring(7);
         }
         return null;
     }
-    @Transactional
     public void expireToken(String accessToken){
         if(!validateToken(accessToken)){
             throw new CustomException(ControllerMessage.EXPIRED_ACCESS_TOKEN);
@@ -173,9 +173,10 @@ public class JwtTokenProvider {
         Date expiration = claims.getExpiration();
         Date now = new Date();
         Long remains = expiration.getTime() - now.getTime();
-        log.info("accessToken remains : {}",remains);
+//        log.info("accessToken remains : {}",remains);
         redisService.blacklistToken(accessToken,remains);
     }
+
     private void updateRefreshToken(Long memberId, String refreshToken){
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new CustomException(ControllerMessage.INVALID_MEMBER));
         member.updateRefreshToken(refreshToken);

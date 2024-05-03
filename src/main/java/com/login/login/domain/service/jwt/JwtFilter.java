@@ -44,7 +44,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("jwt 유효함");
-                filterChain.doFilter(request, response);
             }else{
                 log.info("유효하지 않은 토큰");
             }
@@ -55,7 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
     private boolean isOAuth2LoginPath(HttpServletRequest request){
         String requestURI = request.getRequestURI();
-        return requestURI.startsWith("/login");
+        return requestURI.startsWith("/login") || requestURI.startsWith("/api/pass");
     }
 }
 

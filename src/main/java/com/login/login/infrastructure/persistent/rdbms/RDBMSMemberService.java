@@ -2,6 +2,7 @@ package com.login.login.infrastructure.persistent.rdbms;
 
 import com.login.login.common.exception.ControllerMessage;
 import com.login.login.common.exception.CustomException;
+import com.login.login.domain.model.response.MemberDto;
 import com.login.login.infrastructure.entity.member.Member;
 import com.login.login.infrastructure.entity.member.MemberRepository;
 import com.login.login.domain.model.idpw.SignupRequest;
@@ -33,5 +34,14 @@ public class RDBMSMemberService {
         if(findMember.isPresent()) {
             throw new CustomException(ControllerMessage.DUP_EMAIL);
         }
+    }
+    public MemberDto userInfo(Long id){
+        Member member = memberRepository.findById(id).orElseThrow(() -> new CustomException(ControllerMessage.INVALID_MEMBER));
+        return MemberDto.builder()
+                .name(member.getName())
+                .email(member.getEmail())
+                .profile(member.getProfile())
+                .role(member.getRole().title())
+                .build();
     }
 }
