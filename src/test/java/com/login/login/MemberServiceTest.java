@@ -1,22 +1,17 @@
 package com.login.login;
 
-import com.login.login.exception.CustomException;
-import com.login.login.member.entity.Member;
-import com.login.login.member.entity.MemberRepository;
-import com.login.login.member.entity.Role;
-import com.login.login.member.service.MemberService;
-import com.login.login.member.service.dto.SignupRequest;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import com.login.login.common.exception.CustomException;
+import com.login.login.infrastructure.entity.member.Member;
+import com.login.login.infrastructure.entity.member.MemberRepository;
+import com.login.login.infrastructure.entity.member.Role;
+import com.login.login.infrastructure.persistent.rdbms.RDBMSMemberService;
+import com.login.login.domain.model.idpw.SignupRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 
@@ -31,11 +26,11 @@ public class MemberServiceTest {
     private MemberRepository memberRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
-    private MemberService memberService;
+    private RDBMSMemberService memberService;
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
-        memberService = new MemberService(memberRepository,passwordEncoder);
+        memberService = new RDBMSMemberService(memberRepository,passwordEncoder);
     }
     @Test
     @DisplayName("회원가입 테스트")

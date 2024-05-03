@@ -1,9 +1,8 @@
 package com.login.login;
 
-import com.login.login.exception.CustomException;
-import com.login.login.member.entity.Role;
+import com.login.login.common.exception.CustomException;
+import com.login.login.infrastructure.entity.member.Role;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

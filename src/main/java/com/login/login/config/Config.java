@@ -1,10 +1,10 @@
 package com.login.login.config;
 
-import com.login.login.service.idpwlogin.CustomAuthenticationProvider;
-import com.login.login.service.idpwlogin.CustomIdPwLoginService;
-import com.login.login.service.idpwlogin.CustomIdPwLoginSuccessHandler;
-import com.login.login.service.oauth2.CustomOauth2UserService;
-import com.login.login.service.oauth2.CustomOauthLoginSuccessHandler;
+import com.login.login.domain.service.idpw.CustomAuthenticationProvider;
+import com.login.login.domain.service.idpw.CustomIdPwLoginService;
+import com.login.login.domain.service.idpw.CustomIdPwLoginSuccessHandler;
+import com.login.login.domain.service.oauth2.CustomOauth2UserService;
+import com.login.login.domain.service.oauth2.CustomOauthLoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
