@@ -14,6 +14,7 @@ on:
 env:
   S3_BUCKET_NAME: gwangbu
   RESOURCE_PATH: ./src/main/resources/application.yml
+  AWS_REGION: ap-northeast-2
   CODE_DEPLOY_APPLICATION_NAME: gwangbu-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: gwangbu-code-deploy
 
@@ -25,12 +26,15 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
+
     - name: Set yaml file
       uses: microsoft/variable-substitution@v1
       with:
@@ -46,28 +50,52 @@ jobs:
       # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle Wrapper
-      run: ./gradlew clean build
-
-    - name: Make zip file
-      run: zip -r ./$GITHUB_SHA.zip .
+      run: chmod +x ./gradlew
       shell: bash
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID }}
-        aws-region: ap-northeast-2
+    - name: Build with Gradle Wrapper
+      run: ./gradlew clean build
+      shell: bash
 
-    - name: Upload to S3
-      run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+#    - name: Make zip file
+#      run: zip -r ./$GITHUB_SHA.zip .
+#      shell: bash
+#
+#    - name: Configure AWS credentials
+#      uses: aws-actions/configure-aws-credentials@v1
+#      with:
+#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID }}
+#        aws-region: ${{ env.AWS_REGION }}
+#
+#    - name: Upload to S3
+#      run: aws s3 cp --region ${{ env.AWS_REGION }} ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+#
+#    - name: Code Deploy
+#      run: |
+#        aws deploy create-deployment \
+#        --deployment-config-name CodeDeployDefault.AllAtOnce \
+#        --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+#        --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+#        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
 
-    - name: Code Deploy
+    - name: Docker build & push to prod
+      if: contains(github.ref, 'master')
       run: |
-        aws deploy create-deployment \
-        --deployment-config-name CodeDeployDefault.AllAtOnce \
-        --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-        --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
+        docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_SECRET}}
+        docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/oauth2 .
+        docker push ${{ secrets.DOCKER_USERNAME }}/oauth2
+    - name: Deploy to prod
+      uses: appleboy/ssh-action@master
+      id: deploy-prod
+      if: contains(github.ref,'master')
+      with:
+        host: ${{ secrets.HOST_DEV }}
+        username: ${{ secrets.HOST_USERNAME }}
+        password: ${{ secrets.HOST_PASSWORD }}
+        port: 22
+        script: |
+          sudo docker ps -q --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/oauth2" | xargs -r sudo docker stop
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/oauth2
+          sudo docker run -d -p 8080:8080 --network login ${{ secrets.DOCKER_USERNAME }}/oauth2
+          sudo docker image prune -f
