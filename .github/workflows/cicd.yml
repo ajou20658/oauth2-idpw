@@ -40,15 +40,23 @@ jobs:
         with:
           files: ${{ env.RESOURCE_PATH }}
         env:
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
-          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-          GITHUB_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET_GITHUB }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          spring:
+            security:
+              oauth2:
+                client:
+                  registration:
+                    naver:
+                      client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
+                    google:
+                      client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+                    kakao:
+                      client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+                    github:
+                      client-secret: ${{ secrets.CLIENT_SECRET_GITHUB }}
+          jwt.secret: ${{ secrets.JWT_SECRET }}
+          spring.datasource.url: ${{ secrets.MYSQL_DATABASE }}
+          spring.datasource.username: ${{ secrets.MYSQL_USER }}
+          spring.datasource.password: ${{ secrets.MYSQL_PASSWORD }}
 
         # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
