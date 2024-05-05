@@ -77,8 +77,8 @@ public class JwtTokenProvider {
         updateRefreshToken(Long.valueOf(userId),refresh);
         return JwtAttributes.builder()
                 .userId(Long.valueOf(userId))
-                .accessToken(access)
-                .refreshToken(refresh)
+                .access(access)
+                .refresh(refresh)
                 .build();
     }
     @Transactional
@@ -109,8 +109,8 @@ public class JwtTokenProvider {
         updateRefreshToken(Long.valueOf(userId),refresh);
         return JwtAttributes.builder()
                 .userId(Long.valueOf(userId))
-                .accessToken(access)
-                .refreshToken(refresh)
+                .access(access)
+                .refresh(refresh)
                 .build();
     }
     public Authentication getAuthentication(String token){

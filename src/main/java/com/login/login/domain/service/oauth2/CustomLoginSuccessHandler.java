@@ -6,7 +6,6 @@ import com.login.login.domain.model.jwt.JwtAttributes;
 import com.login.login.domain.service.jwt.JwtTokenProvider;
 import com.login.login.infrastructure.entity.member.Member;
 import com.login.login.infrastructure.entity.member.MemberRepository;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +20,16 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CustomOauthLoginSuccessHandler implements AuthenticationSuccessHandler {
+public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
     @Value("${jwt.redirect_url}")
     private String redirectUrl;
     private final MemberRepository memberRepository;
     private final JwtTokenProvider tokenProvider;
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         JwtAttributes jwt = tokenProvider.generateToken(authentication);
-        String access = jwt.getAccessToken();
-        String refresh = jwt.getRefreshToken();
+        String access = jwt.getAccess();
+        String refresh = jwt.getRefresh();
         Member member = memberRepository.findById(jwt.getUserId()).orElseThrow(() -> new CustomException(ControllerMessage.INVALID_MEMBER));
         member.updateRefreshToken(refresh);
         memberRepository.save(member);

@@ -45,13 +45,11 @@ public class Member extends BaseTime{
         this.refreshToken = refreshToken;
         return refreshToken;
     }
-    public void clearRefreshToken(){
-        this.refreshToken = null;
-    }
     public static Member createMember(SignupRequest request, PasswordEncoder passwordEncoder){
         return Member.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .name(request.getName())
                 .role(Role.findByKey(request.getRole_key()))
                 .social(Social.IDPW)
                 .build();

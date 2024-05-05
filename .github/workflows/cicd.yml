@@ -64,8 +64,6 @@ jobs:
           spring.security.oauth2.client.registration.kakao.client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
           spring.security.oauth2.client.registration.github.client-secret: ${{ secrets.CLIENT_SECRET_GITHUB }}
 
-        # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
-      # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
@@ -74,30 +72,12 @@ jobs:
         run: ./gradlew clean build
         shell: bash
 
-      #    - name: Make zip file
-      #      run: zip -r ./$GITHUB_SHA.zip .
-      #      shell: bash
-      #
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID }}
           aws-region: ${{ env.AWS_REGION }}
-      #    - name: Add Github IP to AWS
-      #      run: |
-      #        aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
-      #
-      #    - name: Upload to S3
-      #      run: aws s3 cp --region ${{ env.AWS_REGION }} ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
-      #
-      #    - name: Code Deploy
-      #      run: |
-      #        aws deploy create-deployment \
-      #        --deployment-config-name CodeDeployDefault.AllAtOnce \
-      #        --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-      #        --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-      #        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
 
       - name: Docker build & push to prod
         if: contains(github.ref, 'master')
@@ -105,11 +85,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_SECRET}}
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/oauth2 .
           docker push ${{ secrets.DOCKER_USERNAME }}/oauth2
-      #    - name: Configure AWS Credentials - AWS 보안 그룹 생성
-      #      uses: aws-actions/configure-aws-credentials@v1
-      #      with:
-      #        aws-access-keyid: ${{ se }}
-      #
+
       - name: Deploy to prod
         uses: appleboy/ssh-action@master
         id: deploy-prod
@@ -121,13 +97,7 @@ jobs:
           port: 22
           script: |
             sudo docker stop oauth2
+            sudo docker rm oauth2
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/oauth2
             sudo docker run -d -p 8080:8080 --network login --name oauth2 ${{ secrets.DOCKER_USERNAME }}/oauth2
             sudo docker image prune -f
-#                        echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker stop $(sudo docker ps -q) 2>/dev/null || true
-#                        echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker pull ${{ secrets.DOCKER_USERNAME }}/oauth2
-#                        echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker run -d -p 8080:8080 --network login ${{ secrets.DOCKER_USERNAME }}/oauth2
-#                        echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker image prune -f
-#    - name: REMOVE Github IP FROM security group
-#      run: |
-#        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32

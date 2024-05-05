@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class JwtAttributes {
     private Long userId;
-    private String accessToken;
-    private String refreshToken;
+    private String access;
+    private String refresh;
 }
