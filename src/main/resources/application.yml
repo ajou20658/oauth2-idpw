@@ -1,7 +1,7 @@
 spring:
-  config:
-    import:
-      - classpath:env.yml
+#  config:
+#    import:
+#      - classpath:env.yml
   profiles:
     active: oauth,db
 jwt:
