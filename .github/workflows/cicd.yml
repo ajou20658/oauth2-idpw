@@ -105,14 +105,14 @@ jobs:
           password: ${{ secrets.HOST_PASSWORD }}
           port: 22
           script: |
-#            echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker stop $(sudo docker ps -q) 2>/dev/null || true
-#            echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker pull ${{ secrets.DOCKER_USERNAME }}/oauth2
-#            echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker run -d -p 8080:8080 --network login ${{ secrets.DOCKER_USERNAME }}/oauth2
-#            echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker image prune -f
             sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/oauth2
             sudo docker run -d -p 8080:8080 --network login ${{ secrets.DOCKER_USERNAME }}/oauth2
             sudo docker image prune -f
+#                        echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker stop $(sudo docker ps -q) 2>/dev/null || true
+#                        echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker pull ${{ secrets.DOCKER_USERNAME }}/oauth2
+#                        echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker run -d -p 8080:8080 --network login ${{ secrets.DOCKER_USERNAME }}/oauth2
+#                        echo "${{ secrets.HOST_PASSWORD }}" | sudo -S docker image prune -f
 #    - name: REMOVE Github IP FROM security group
 #      run: |
 #        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
