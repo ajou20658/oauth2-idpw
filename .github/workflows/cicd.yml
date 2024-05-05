@@ -43,7 +43,7 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
           KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-          GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+          GITHUB_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET_GITHUB }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
