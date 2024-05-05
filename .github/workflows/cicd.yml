@@ -121,6 +121,7 @@ jobs:
           port: 22
           script: |
             sudo docker stop oauth2
+            sudo docker rm oauth2
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/oauth2
             sudo docker run -d -p 8080:8080 --network login --name oauth2 ${{ secrets.DOCKER_USERNAME }}/oauth2
             sudo docker image prune -f
