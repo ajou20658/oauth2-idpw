@@ -40,19 +40,10 @@ jobs:
         with:
           files: ${{ env.RESOURCE_PATH }}
         env:
-          spring:
-            security:
-              oauth2:
-                client:
-                  registration:
-                    naver:
-                      client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
-                    google:
-                      client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-                    kakao:
-                      client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
-                    github:
-                      client-secret: ${{ secrets.CLIENT_SECRET_GITHUB }}
+          spring.security.oauth2.client.registration.naver.client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
+          spring.security.oauth2.client.registration.google.client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          spring.security.oauth2.client.registration.kakao.client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          spring.security.oauth2.client.registration.github.client-secret: ${{ secrets.CLIENT_SECRET_GITHUB }}
           jwt.secret: ${{ secrets.JWT_SECRET }}
           spring.datasource.url: ${{ secrets.MYSQL_DATABASE }}
           spring.datasource.username: ${{ secrets.MYSQL_USER }}
