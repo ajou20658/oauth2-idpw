@@ -1,4 +1,4 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=7DDA58&height=100&section=header&text=&fontSize=0" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=7DDA58&height=100&section=header&text=&fontSize=0" width="100%" alt="header"/>
 
 ## 기술스택
 
@@ -14,10 +14,17 @@
 
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+
+---
+
+
 # API 명세서
+
 * [ID&PW 로그인](#idpw-로그인)
 * [OAuth2 로그인](#oauth2-로그인)
 * [JWT 토큰관련 기능](#jwt-토큰관련)
+
+---
 
 ## ID&PW 로그인
 ### 회원가입 
@@ -50,6 +57,8 @@
 }
 ```
 
+---
+
 ## OAuth2 로그인
 ### 로그인 및 회원가입
 * URL(Github): `/oauth2/authorization/github`
@@ -62,6 +71,8 @@
   * 쿼리 파라미터에 jwt 토큰을 포함하여 프론트 엔드의 주소로 리다이렉트 된다.
   * `/redirect?access={access}&refresh={refresh}`
   * 프론트 엔드의 주소는 환경 변수를 통하여 설정할 수 있다.
+
+---
 
 ## JWT 토큰관련
 ### JWT 갱신
@@ -83,4 +94,19 @@
 * Response: (HTTP Status 200)
 
 ---
-<img src="https://capsule-render.vercel.app/api?type=rect&color=7DDA58&height=40&section=footer&text=&fontSize=0" width="100%"/>
+
+
+# 로직 설명
+## 로그인 로직
+<img src="src/main/resources/static/loginLogic.png" width="3244" alt="loginLogic">
+
+---
+
+## 로그아웃 로직
+<img src="src/main/resources/static/logoutLogic.png" width="70%" alt="logoutLogic">
+
+## 재발급 로직 
+<img src="src/main/resources/static/refreshLogic.png" width="70%" alt="refreshLogic">
+
+---
+<img src="https://capsule-render.vercel.app/api?type=rect&color=7DDA58&height=40&section=footer&text=&fontSize=0" width="100%" alt="footer"/>
